@@ -1,14 +1,14 @@
-import scrape from './scrape'
-import convertCsa from './convert_csa'
+import scrape from "./scrape"
+import convertCsa from "./convertCsa"
 
-export function main(url: any, options: any): Promise<any> {
+export function main(url: string, options: any): Promise<any> {
     return scrape(url)
-        .then(({game_data, moves}: any) => {
+        .then(scraped => {
             switch (options.format) {
                 default:
-                    return convertCsa(game_data, moves)
+                    return convertCsa(scraped)
             }
         })
 }
-main(process.argv[2], { format: 'csa' })
+main(process.argv[2], { format: "csa" })
     .then(console.log)

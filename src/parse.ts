@@ -1,16 +1,14 @@
-import fetch from "node-fetch"
 import * as _ from "lodash"
 
-export default scrape
+export default parse
 
-export async function scrape(url: string) {
-    const body = assumeNotNull(await fetch(url).then(b => b.text()))
+export function parse(body: string): Parsed {
     const gameData = extractGameData(body)
     const { moves, ending} = extractMoves(body, gameData.initialRemainingSec)
     return { gameData, moves, ending }
 }
 
-export interface Scraped {
+export interface Parsed {
     gameData: GameData,
     moves: Move[],
     ending: CSAEnding

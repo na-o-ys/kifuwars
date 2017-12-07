@@ -1,12 +1,11 @@
 import * as moment from "moment"
 import * as _ from "lodash"
-import { GameData, Move, CSAEnding, Scraped } from "./scrape"
-import { endianness } from "os";
+import { GameData, Move, CSAEnding, Parsed } from "../parse"
 
 // WarsCSA -> CSA
-export default convertCsa
+export default convert
 
-export function convertCsa({ gameData, moves, ending }: Scraped) {
+export function convert({ gameData, moves, ending }: Parsed) {
     let header = generateHeader(gameData)
     let body   = generateBody(moves, ending)
     return [header, body].join("\n")
@@ -19,12 +18,13 @@ function generateHeader(gameData: GameData) {
         white: gameData.players.white.name + ` (${gameData.players.white.grade})`
     }
     return [
+        "V2.2",
         `N+${players.black}`,
         `N-${players.white}`,
-        "V2.2",
         `$EVENT:将棋ウォーズ ${gameData.rule}`,
         `$START_TIME:${date}`,
         `$TIME_LIMIT:${gameData.csaTimeLimit}`,
+        "PI",
         "+" // 先手番
     ].join("\n")
 }

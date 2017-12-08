@@ -21,7 +21,7 @@ function generateHeader(gameData: GameData) {
         "V2.2",
         `N+${players.black}`,
         `N-${players.white}`,
-        `$EVENT:将棋ウォーズ ${gameData.rule}`,
+        `$EVENT:将棋ウォーズ ${gameData.rule} (${gameData.url})`,
         `$START_TIME:${date}`,
         `$TIME_LIMIT:${gameData.csaTimeLimit}`,
         "PI",

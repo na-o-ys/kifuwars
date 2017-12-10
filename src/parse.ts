@@ -2,8 +2,8 @@ import * as _ from "lodash"
 
 export default parse
 
-export function parse(body: string): Parsed {
-    const gameData = extractGameData(body)
+export function parse(body: string, url: string): Parsed {
+    const gameData = extractGameData(body, url)
     const { moves, ending} = extractMoves(body, gameData.initialRemainingSec)
     return { gameData, moves, ending }
 }
@@ -19,6 +19,7 @@ export interface GameData {
     rule: string
     csaTimeLimit: string
     initialRemainingSec: number
+    url: string
     players: {
         black: {
             name: string
@@ -31,7 +32,7 @@ export interface GameData {
     }
 }
 
-function extractGameData(body: string): GameData {
+function extractGameData(body: string, url: string): GameData {
     const black_grade = assumeNotNull(body.match(/\s+dan0:\s"(.*)"/))[1]
     const white_grade = assumeNotNull(body.match(/\s+dan1:\s"(.*)"/))[1]
     const gtype       = assumeNotNull(body.match(/\s+gtype:\s"(.*)"/))[1]
@@ -47,6 +48,7 @@ function extractGameData(body: string): GameData {
         rule: WarsRules[gtype].rule,
         csaTimeLimit: WarsRules[gtype].csaTimeLimit,
         initialRemainingSec: WarsRules[gtype].initialRemainingSec,
+        url,
         players: {
             black: {
                 name: black_name,
@@ -115,11 +117,13 @@ function parseEnding(line: string): CSAEnding {
         return "%KACHI"
     } else if (line.includes("DRAW_SENNICHI")) {
         return "%SENNICHITE"
+    } else if (line.includes("_WIN_CHECKMATE")) {
+        return "%TSUMI"
     }
     return "%ERROR"
 }
 
-export type CSAEnding = "%TORYO" | "%TIME_UP" | "%KACHI" | "%SENNICHITE" | "%ERROR"
+export type CSAEnding = "%TORYO" | "%TIME_UP" | "%KACHI" | "%SENNICHITE" | "%TSUMI" | "%ERROR"
 
 const WarsRules: { [key: string]: WarsRule } = {
     '': {

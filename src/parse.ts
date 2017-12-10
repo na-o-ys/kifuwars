@@ -117,11 +117,13 @@ function parseEnding(line: string): CSAEnding {
         return "%KACHI"
     } else if (line.includes("DRAW_SENNICHI")) {
         return "%SENNICHITE"
+    } else if (line.includes("_WIN_CHECKMATE")) {
+        return "%TSUMI"
     }
     return "%ERROR"
 }
 
-export type CSAEnding = "%TORYO" | "%TIME_UP" | "%KACHI" | "%SENNICHITE" | "%ERROR"
+export type CSAEnding = "%TORYO" | "%TIME_UP" | "%KACHI" | "%SENNICHITE" | "%TSUMI" | "%ERROR"
 
 const WarsRules: { [key: string]: WarsRule } = {
     '': {

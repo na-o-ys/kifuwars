@@ -22,7 +22,7 @@ app.get("/users/:userId/:count", async (req, res) => {
     const count: number = req.params["count"] == "latest" ? 0 : Number(req.params["count"])
     const histories = await fetchHistory(userId)
     const gameId = histories[count].gameId
-    await fetchGameAndRender(res, gameId)
+    res.redirect(`/games/${gameId}`)
 })
 
 const port = Number(process.env.PORT || 3000)
